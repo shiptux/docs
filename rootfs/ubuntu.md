@@ -26,6 +26,19 @@ Debian 只有单个 `mk-lite-rootfs.sh`。
 
 desktop profile 只在路径 1 实现，在路径 2 或 3 上请求会报错退出。
 
+另一处与 Debian 不同的地方：`build-rootfs-buildx.sh` 接受的是**版本号**，
+Debian 的同名脚本接受的是 suite 代号。
+
+```shell
+cd build/sources/ubuntu
+MAKE_EXT4=1 ARCH=arm64 ./docker/build-rootfs-buildx.sh 24.04   # 不是 noble
+
+cd build/sources/debian
+MAKE_EXT4=1 ARCH=arm64 ./docker/build-rootfs-buildx.sh trixie  # 不是 13
+```
+
+传错会立刻退出并打印 `usage: ./docker/build-rootfs-buildx.sh [22.04|24.04]`。
+
 可用 `OPENTINA_UBUNTU_USE_BUILDX=0` 或 `OPENTINA_UBUNTU_USE_DOCKER=0` 关闭前两条。
 
 ## 3. 构建命令
