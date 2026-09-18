@@ -10,6 +10,6 @@
 | [rootfs/yocto.md](rootfs/yocto.md) | Yocto rootfs：layer 结构、profile、并行度与内存、产物与限制 |
 | [rootfs/openwrt.md](rootfs/openwrt.md) | OpenWrt rootfs：rootfs-only 定位、补丁与 overlay、内核 builtin 要求、产物与限制 |
 | [rootfs/ubuntu.md](rootfs/ubuntu.md) | Ubuntu rootfs：与 Debian 的实质差异、双 mirror、默认账号、产物与限制 |
+| [graphics/a733-gpu.md](graphics/a733-gpu.md) | A733 GPU 与显示栈：两条驱动路线的区别、Mesa 版本门槛、各发行版基线、验证步骤 |
 
-待补充：Buildroot 各 rootfs 的构建与验证文档，以及
-A733 显示与 GPU 专题。
+待补充：Buildroot rootfs 的构建与验证文档。
