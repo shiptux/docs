@@ -9,6 +9,7 @@
 | [rootfs/debian.md](rootfs/debian.md) | Debian rootfs：构建路径、profile、OEM 注入、产物、部署与限制 |
 | [rootfs/yocto.md](rootfs/yocto.md) | Yocto rootfs：layer 结构、profile、并行度与内存、产物与限制 |
 | [rootfs/openwrt.md](rootfs/openwrt.md) | OpenWrt rootfs：rootfs-only 定位、补丁与 overlay、内核 builtin 要求、产物与限制 |
+| [rootfs/ubuntu.md](rootfs/ubuntu.md) | Ubuntu rootfs：与 Debian 的实质差异、双 mirror、默认账号、产物与限制 |
 
-待补充：Ubuntu、Buildroot 各 rootfs 的构建与验证文档，以及
+待补充：Buildroot 各 rootfs 的构建与验证文档，以及
 A733 显示与 GPU 专题。
