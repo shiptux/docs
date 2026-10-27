@@ -119,10 +119,11 @@ chromium fonts-dejavu-core dbus-user-session
 Chromium 取自 xtradeb PPA，因为 Ubuntu 自带的 `chromium-browser` 只是指向 snap
 的 shim，在无 snapd 的 rootfs 中不可用。
 
-与 Debian 相同，desktop profile 当前在 `/etc/environment` 写入
-`LIBGL_ALWAYS_SOFTWARE=1` 与 `GALLIUM_DRIVER=llvmpipe`，固定软件渲染，且未安装
-`mesa-vulkan-drivers`。noble 自带的 Mesa 为 25.2.8，低于 A733 所需的 25.3，
-硬件加速路径见第 8 节。
+noble 的 desktop profile 从 kisak-mesa PPA 安装 Mesa 26.2 与
+`mesa-vulkan-drivers`（noble 自带 25.2，低于 A733 所需的 25.3），并在
+`/etc/environment` 写入 `PVR_I_WANT_A_BROKEN_VULKAN_DRIVER=1`，GL 经 zink 走
+Imagination Vulkan 驱动。要临时对照 llvmpipe，按 `graphics/a733-gpu.md`
+第 6 节设置环境变量即可。
 
 ### 5.3 X11
 
@@ -148,9 +149,10 @@ GPT 上的 FAT 启动分区由 U-Boot 使用，不在 rootfs 内挂载。
 
 ## 8. 已知限制
 
-- desktop profile 固定软件渲染。noble 自带 Mesa 25.2.8 低于 A733 所需的 25.3，
-  且未安装 `mesa-vulkan-drivers`。硬件加速需要更高的 Mesa 基线，Ubuntu 侧可用
-  的来源是 kisak-mesa PPA（26.2.2）；该改造尚未实施。
+- 硬件加速依赖第三方 kisak-mesa PPA，Mesa 版本随 PPA 滚动。Chromium 受驱动经
+  zink 仅暴露 OpenGL ES 2.0 的限制，GPU 进程退出后回落到软件合成。
+- warm reboot（`reboot` 命令）后板子不再启动，所有 rootfs 一致，属固件问题，
+  见 opentina-org/build#26；回归测试用断电冷启动代替。
 - 默认创建的额外账号 `cat` 带固定弱口令 `temppwd`。对外交付的镜像应通过
   `EXTRA_USER_PASSWORD` 覆盖，或去掉该账号。
 - 只有 XWayland，没有 Xorg server。

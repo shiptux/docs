@@ -109,11 +109,12 @@ pulseaudio alsa-utils
 chromium fonts-dejavu-core dbus-user-session
 ```
 
-当前 desktop profile 在 `/etc/environment` 中写入
-`LIBGL_ALWAYS_SOFTWARE=1` 与 `GALLIUM_DRIVER=llvmpipe`，即固定使用 llvmpipe
-软件渲染。原因是 trixie 自带的 Mesa 为 25.0，而 A733 的 Imagination BXM-4-64
-需要 Mesa 25.3 及以上；镜像也未安装 `mesa-vulkan-drivers`，因此不存在可用的
-Vulkan ICD。硬件加速路径的状态见第 9 节。
+trixie 的 desktop profile 从 `trixie-backports` 安装 Mesa 26.1 与
+`mesa-vulkan-drivers`，并在 `/etc/environment` 写入
+`PVR_I_WANT_A_BROKEN_VULKAN_DRIVER=1`，GL 经 zink 走 Imagination Vulkan 驱动；
+不再写死 `LIBGL_ALWAYS_SOFTWARE`。bookworm 的 backports 仍停在 Mesa 25.0，该
+suite 保持软件渲染。要临时对照 llvmpipe，按 `graphics/a733-gpu.md` 第 6 节
+设置环境变量即可。
 
 ### 5.3 X11
 
@@ -175,9 +176,10 @@ GPT 自动挂载，systemd 会尝试挂载不存在的 `/boot` 并报错。
 ## 9. 已知限制
 
 - D2 未满足：当前实现不是 `live-build`。
-- desktop profile 固定软件渲染，硬件加速未启用。改用 `trixie-backports` 的
-  Mesa 26.1 并安装 `mesa-vulkan-drivers` 的改动目前只存在于本地分支，未合并，
-  也未经真机验证。
+- 硬件加速只覆盖 trixie；bookworm desktop 仍是 llvmpipe。Chromium 受驱动经
+  zink 仅暴露 OpenGL ES 2.0 的限制，GPU 进程退出后回落到软件合成。
+- warm reboot（`reboot` 命令）后板子不再启动，所有 rootfs 一致，属固件问题，
+  见 opentina-org/build#26；回归测试用断电冷启动代替。
 - 只有 XWayland，没有 Xorg server。
 - PulseAudio 与 ALSA 工具已在 desktop profile 中，但真机上 `/dev/snd` 只有
   timer，`aplay -l` 与 `arecord -l` 均无声卡，ALSA machine 未注册。播放与录音

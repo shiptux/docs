@@ -163,9 +163,11 @@ debugfs -R "ls /usr/bin" output/<BOARD>/rootfs.ext2
 - Y1 未满足：没有 U-Boot、kernel、TF-A 的 Yocto recipe，layer 为 rootfs-only。
 - Y2 部分完成：`qt` profile 引用的是 OE 上游的 Mesa 与 Qt recipe，只能软件渲染；
   layer 内没有 A733 GPU 相关的 recipe 或 bbappend。
-- **HMI profile 尚未合并**。`opentina-image-hmi.bb`、`conf/distro/opentina-hmi.conf`、
-  mesa bbappend 与 PowerVR 固件 recipe 都不在 `main` 上，只存在于未合并的分支与
-  草稿 PR。`main` 上可用的只有 `minimal` 与 `qt` 两个 profile。
+- **HMI profile 尚未合并到 `meta-opentina`**。`build` 仓库侧的
+  `OPENTINA_YOCTO_PROFILE=hmi` 入口已合并，但 `opentina-image-hmi.bb`、
+  `conf/distro/opentina-hmi.conf`、mesa bbappend、PowerVR 固件 recipe 与
+  `packagegroup-opentina-*` 仍在 opentina-org/meta-opentina#4。`main` 上可用的
+  只有 `minimal` 与 `qt` 两个 profile。
 - **迁移到 wrynose 之后的 layer 拆分尚未合并**。`main` 仍使用合并版 poky 与
   `scarthgap` 分支。基于 openembedded-core / bitbake / meta-yocto 分别拉取的改动
   同样在未合并的分支上。

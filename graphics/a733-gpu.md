@@ -150,8 +150,10 @@ Debian/Ubuntu 的 desktop profile 提供了 `opentina-hmi-check`，按上述顺�
 ## 7. 已知限制
 
 - 驱动未通过 Vulkan 一致性认证，必须显式 opt-in。
-- Yocto 的 HMI profile 尚未合并到 `meta-opentina` 的 `main`。
-- Debian 的 backports Mesa 改动与 Ubuntu 的 PPA 改动均未合并。
-- 上述改动都尚未在真机验证；同事此前报告 Mesa 26.1 在硬件上无需补丁即可工作，
-  但本项目自身尚无可复现的真机记录。
+- Yocto 的 HMI profile 尚未合并到 `meta-opentina` 的 `main`
+  （opentina-org/meta-opentina#4）。
+- Debian trixie、Ubuntu noble 与 Yocto HMI 三种 rootfs 已在 Radxa A7A 上确认
+  Weston、GStreamer `waylandsink` 与 XWayland 客户端走 zink/PowerVR；Chromium
+  因驱动只暴露 OpenGL ES 2.0 而回落软件合成。
+- warm reboot 后板子不再启动（opentina-org/build#26），GPU 回归用冷启动。
 - 未定义性能基线与回归阈值，`glmark2` 的对比目前只能给出相对结论。
