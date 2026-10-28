@@ -51,11 +51,15 @@ KERNEL_DEVICETREE ?= "allwinner/sun60i-a733-aiot.dtb"
 |---|---|---|---|
 | `minimal` | `opentina-minimal` | `opentina-image-minimal` | `build-opentina` |
 | `qt` | `opentina-qt` | `opentina-image-qt` | `build-opentina-qt` |
+| `hmi` | `opentina-hmi` | `opentina-image-hmi` | `build-opentina-hmi` |
 
 `minimal` 面向串口控制台，含 `packagegroup-core-boot`、OpenSSH 与基础网络工具。
 `qt` 在此基础上加入 qtbase、qtdeclarative、qtsvg、qtwayland、qtgraphicaleffects、
 qtmultimedia 与 mesa，并在 `wayland` DISTRO_FEATURE 开启时加入 weston。
 `qt` 需要 meta-qt5，因此必须以 `yocto-init.sh --qt` 初始化。
+`hmi` 是 A733 GPU 上的 Wayland/Weston HMI（Mesa imagination Vulkan + zink、
+GStreamer、PulseAudio、XWayland、OpenSSH），不需要 meta-qt5；其 recipe 尚在
+opentina-org/meta-opentina#4，见第 8 节。
 
 `opentina-build.sh` 另有一个 `env` 模式，只建立构建环境而不执行 bitbake，便于
 手动运行 bitbake 命令。
@@ -67,7 +71,8 @@ qtmultimedia 与 mesa，并在 `wayland` DISTRO_FEATURE 开启时加入 weston�
 ```shell
 cd build
 ./build.sh <BOARD_NAME> yocto build yocto   # 仅 rootfs，耗时长
-./build.sh <BOARD_NAME> yocto build         # 完整镜像
+./build.sh <BOARD_NAME> yocto build         # 完整镜像，默认 minimal profile
+OPENTINA_YOCTO_PROFILE=hmi ./build.sh <BOARD_NAME> yocto build   # HMI profile
 ```
 
 `build_yocto` 会拒绝以 root 运行。若 `meta-openembedded` 尚未就绪，它会先自动
@@ -77,7 +82,7 @@ cd build
 
 | 变量 | 默认 | 说明 |
 |---|---|---|
-| `OPENTINA_YOCTO_PROFILE` | `minimal` | 只接受 `minimal` 或 `qt`，其它值报错退出 |
+| `OPENTINA_YOCTO_PROFILE` | `minimal` | 只接受 `minimal`、`qt` 或 `hmi`，其它值报错退出。profile 不是默认开启的，HMI 必须显式指定 |
 | `YOCTO_MACHINE` / `OPENTINA_YOCTO_MACHINE` | `a733-aiot` | layer 的 machine 名，与 `BOARD_NAME` 无关 |
 | `OPENTINA_YOCTO_DIR` | `sources/yocto` | Yocto 工作区 |
 
@@ -86,7 +91,7 @@ cd build
 ```shell
 cd build/sources/meta-opentina
 ./yocto-init.sh                 # 或 ./yocto-init.sh --qt
-./opentina-build.sh minimal     # 或 qt / env
+./opentina-build.sh minimal     # 或 qt / hmi / env
 ```
 
 ### 4.3 并行度与内存
